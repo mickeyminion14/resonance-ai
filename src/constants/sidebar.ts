@@ -6,8 +6,8 @@ import {
   Settings,
   Volume2,
 } from "lucide-react";
-import { MenuItem } from "./index.interface";
 import { useClerk } from "@clerk/nextjs";
+import { MenuItem } from "@/interfaces/sidebar";
 export const MAIN_MENU_ITEMS: MenuItem[] = [
   {
     title: "Dashboard",

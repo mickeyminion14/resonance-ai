@@ -11,7 +11,7 @@ export const Navbar = () => {
           <Button size={"sm"} variant={"outline"} asChild>
             <Link href={"/dashboard"}>Login</Link>
           </Button>
-          <Button size={"sm"} variant={"primaryOrange"} asChild>
+          <Button size={"sm"} asChild>
             <Link href={"/dashboard"}>Try Skech & Collab for free</Link>
           </Button>
         </div>

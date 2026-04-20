@@ -18,10 +18,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { OrganizationSwitcher, useClerk, UserButton } from "@clerk/nextjs";
-import { NavSectionProps } from "./index.interface";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { MAIN_MENU_ITEMS, OTHER_MENU_ITEMS } from "./sidebar.constants";
+import { MAIN_MENU_ITEMS, OTHER_MENU_ITEMS } from "@/constants/sidebar";
+import { NavSectionProps } from "@/interfaces/sidebar";
 
 function NavSection({ label, items, pathname }: NavSectionProps) {
   return (
