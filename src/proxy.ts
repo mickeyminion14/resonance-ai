@@ -5,8 +5,23 @@ const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 const isOrgSelectionRoute = createRouteMatcher(["/org-selection(.*)"]);
 
+const isPublicRoot = createRouteMatcher(["/"]);
+
 export default clerkMiddleware(async (auth, req) => {
   const { userId, orgId } = await auth();
+
+  if (isPublicRoot(req)) {
+    if (userId) {
+      if (orgId) {
+        return Response.redirect(new URL("/dashboard", req.url));
+      } else {
+        return Response.redirect(new URL("/org-selection", req.url));
+      }
+    }
+    {
+      return NextResponse.next();
+    }
+  }
 
   // allow public routes
   if (isPublicRoute(req)) {

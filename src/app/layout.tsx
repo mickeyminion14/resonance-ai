@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { TooltipProvider } from "@/components/ui/tooltip";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={cn("h-full", "antialiased", inter.variable)}>
         <body className="min-h-full flex flex-col">
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
           <Toaster />
         </body>
       </html>
