@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { TEXT_MAX_LENGTH } from "@/constants/constraints";
+import { PER_CHARACTER_RATE, TEXT_MAX_LENGTH } from "@/constants/constraints";
 import { Coins, Stars } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,7 +28,7 @@ const TextInputPanel = () => {
         <div className="space-y-4 rounded-2xl bg-white p-4 drop-shadow-xs">
           <Textarea
             placeholder="Start typing or paste your text here..."
-            className="min-h-25 resize-none border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+            className="min-h-25 max-h-25 overflow-scroll resize-none border-0 bg-transparent shadow-none focus-visible:ring-0"
             value={text}
             onChange={(e) => setText(e.target.value)}
             maxLength={TEXT_MAX_LENGTH}
@@ -42,7 +42,10 @@ const TextInputPanel = () => {
                   "Start typing to estimate"
                 ) : (
                   <>
-                    <span>${(text.length * 0.0003).toFixed(4)}</span> estimated
+                    <span>
+                      ${(text.length * PER_CHARACTER_RATE).toFixed(4)}
+                    </span>{" "}
+                    estimated
                   </>
                 )}
               </span>

@@ -9,7 +9,7 @@ const PageHeader = ({
   className,
 }: {
   title: string;
-  className: string;
+  className?: string;
 }) => {
   return (
     <div
