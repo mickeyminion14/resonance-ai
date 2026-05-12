@@ -1,24 +1,22 @@
-"use client";
+import type { Metadata } from "next";
+import { trpc, HydrateClient, prefetch } from "@/trpc/server";
+import { TextToSpeechView } from "./view";
 
-import TextInputPanel from "./_components/text-input-panel";
-import VoicePreviewPlaceholder from "./_components/voice-preview-placeholder";
-import SettingsPanel from "./_components/settings-panel";
-import TextToSpeechForm, {
-  defaultTTSValues,
-} from "./_components/text-to-speech-form";
+export const metadata: Metadata = { title: "Text to Speech" };
 
-const TextToSpeechPage = () => {
+export default async function TextToSpeechPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ text?: string; voiceId?: string }>;
+}) {
+  const { text, voiceId } = await searchParams;
+
+  prefetch(trpc.voices.getAll.queryOptions());
+  // prefetch(trpc.generations.getAll.queryOptions());
+
   return (
-    <TextToSpeechForm defaultValues={defaultTTSValues}>
-      <div className="flex  min-h-0 flex-1 overflow-hidden">
-        <div className="flex min-h-0 flex-1 flex-col">
-          <TextInputPanel />
-          <VoicePreviewPlaceholder />
-        </div>
-        <SettingsPanel />
-      </div>
-    </TextToSpeechForm>
+    <HydrateClient>
+      <TextToSpeechView initialValues={{ text, voiceId }} />
+    </HydrateClient>
   );
-};
-
-export default TextToSpeechPage;
+}
