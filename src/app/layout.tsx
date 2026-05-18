@@ -10,8 +10,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: {
-    default: "Resonance",
-    template: `Resonance | %s`,
+    default: "Voxora",
+    template: `Voxora | %s`,
   },
   description: "AI Powered text to speech and voice cloning platform",
 };

@@ -7,4 +7,5 @@ export interface Slider {
   max: number;
   step: number;
   defaultValue: number;
+  info: string;
 }

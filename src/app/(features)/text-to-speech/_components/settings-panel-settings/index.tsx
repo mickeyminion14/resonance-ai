@@ -5,6 +5,12 @@ import { useTypedAppFormContext } from "@/hooks/use-app-form";
 import { useStore } from "@tanstack/react-form";
 import { ttsFormOptions } from "../text-to-speech-form";
 import { VoiceSelector } from "../voice-selector";
+import { Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const SettingsPanelSettings = () => {
   const form = useTypedAppFormContext(ttsFormOptions);
@@ -21,7 +27,18 @@ const SettingsPanelSettings = () => {
             <form.Field key={slider.id} name={slider.id}>
               {(field) => (
                 <Field>
-                  <FieldLabel>{slider.label}</FieldLabel>
+                  <FieldLabel>
+                    {slider.label}
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="size-4" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p>{slider.info}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </FieldLabel>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
                       {slider.leftLabel}

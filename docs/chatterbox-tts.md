@@ -4,13 +4,13 @@ This document explains [`chatterbox_tts.py`](../chatterbox_tts.py) — a **serve
 
 If you come from **Node.js / Express / NestJS**, the mental model is:
 
-| This file | Node analogy |
-|-----------|--------------|
-| `modal.App` + `image` | Dockerfile + deploy config (Lambda/container image) |
-| `Chatterbox` class | A NestJS `@Injectable()` service living on a GPU worker |
-| `@modal.asgi_app()` | Mounting Express/Fastify as the HTTP layer on that worker |
-| `@modal.method()` | An internal RPC you can call from other Modal code |
-| `modal run ...` | `npm run` a one-off script against deployed infra |
+| This file             | Node analogy                                              |
+| --------------------- | --------------------------------------------------------- |
+| `modal.App` + `image` | Dockerfile + deploy config (Lambda/container image)       |
+| `Chatterbox` class    | A NestJS `@Injectable()` service living on a GPU worker   |
+| `@modal.asgi_app()`   | Mounting Express/Fastify as the HTTP layer on that worker |
+| `@modal.method()`     | An internal RPC you can call from other Modal code        |
+| `modal run ...`       | `npm run` a one-off script against deployed infra         |
 
 ---
 
@@ -52,7 +52,7 @@ The top of the file documents:
 ### 2. R2 storage mount
 
 ```python
-R2_BUCKET_NAME = "resonance-ai"
+R2_BUCKET_NAME = "<your-bucket-name>"
 R2_MOUNT_PATH = "/r2"
 r2_bucket = modal.CloudBucketMount(
     R2_BUCKET_NAME,
@@ -120,23 +120,23 @@ class TTSRequest {
 - `Field(...)` — required field.
 - `Field(default=0.8, ge=0.0, le=2.0)` — optional with min/max bounds.
 
-| Field | Purpose |
-|-------|---------|
-| `prompt` | Text to speak (1–5000 chars) |
-| `voice_key` | Path inside R2 mount, e.g. `voices/system/<id>.wav` |
-| `temperature`, `top_p`, `top_k`, `repetition_penalty` | Sampling / generation controls |
-| `norm_loudness` | Whether to normalize output loudness |
+| Field                                                 | Purpose                                             |
+| ----------------------------------------------------- | --------------------------------------------------- |
+| `prompt`                                              | Text to speak (1–5000 chars)                        |
+| `voice_key`                                           | Path inside R2 mount, e.g. `voices/system/<id>.wav` |
+| `temperature`, `top_p`, `top_k`, `repetition_penalty` | Sampling / generation controls                      |
+| `norm_loudness`                                       | Whether to normalize output loudness                |
 
 #### `verify_api_key`
 
 Global auth guard:
 
-| FastAPI | NestJS |
-|---------|--------|
-| `APIKeyHeader(name="x-api-key")` | Reading `X-Api-Key` header |
-| `Security(api_key_scheme)` | `@Headers('x-api-key')` |
+| FastAPI                                         | NestJS                             |
+| ----------------------------------------------- | ---------------------------------- |
+| `APIKeyHeader(name="x-api-key")`                | Reading `X-Api-Key` header         |
+| `Security(api_key_scheme)`                      | `@Headers('x-api-key')`            |
 | `dependencies=[Depends(verify_api_key)]` on app | `@UseGuards(ApiKeyGuard)` globally |
-| `HTTPException(403)` | `throw new ForbiddenException()` |
+| `HTTPException(403)`                            | `throw new ForbiddenException()`   |
 
 Expected key: environment variable `CHATTERBOX_API_KEY` from Modal secret `chatterbox-api-key`.
 
@@ -157,13 +157,13 @@ class Chatterbox:
 
 A **long-lived GPU worker class**, not a plain serverless function.
 
-| Decorator / option | Meaning |
-|--------------------|---------|
-| `gpu="a10g"` | Runs on NVIDIA A10G |
-| `scaledown_window=60 * 5` | Idle ~5 minutes, then scale down (cost control) |
-| `secrets=[...]` | Inject HF token, API key, R2 credentials |
-| `volumes={...}` | Mount R2 at `/r2` |
-| `@modal.concurrent(max_inputs=10)` | Up to 10 concurrent requests per container |
+| Decorator / option                 | Meaning                                         |
+| ---------------------------------- | ----------------------------------------------- |
+| `gpu="a10g"`                       | Runs on NVIDIA A10G                             |
+| `scaledown_window=60 * 5`          | Idle ~5 minutes, then scale down (cost control) |
+| `secrets=[...]`                    | Inject HF token, API key, R2 credentials        |
+| `volumes={...}`                    | Mount R2 at `/r2`                               |
+| `@modal.concurrent(max_inputs=10)` | Up to 10 concurrent requests per container      |
 
 **Node analogy:** A warm GPU pod with env secrets and a volume — closer to a Kubernetes Deployment than a stateless Lambda.
 
@@ -191,15 +191,15 @@ def serve(self):
 
 **FastAPI vs Express:**
 
-| FastAPI | Express |
-|---------|---------|
-| `web_app = FastAPI()` | `const app = express()` |
-| `@web_app.post("/generate")` | `app.post("/generate", ...)` |
-| `request: TTSRequest` | Body parsed and validated (like Zod middleware) |
-| `HTTPException(400)` | `res.status(400).json({ ... })` |
-| `StreamingResponse(...)` | `res.type('audio/wav').send(buffer)` |
-| `CORSMiddleware` | `cors()` middleware |
-| Auto `/docs` | Swagger UI (built in) |
+| FastAPI                      | Express                                         |
+| ---------------------------- | ----------------------------------------------- |
+| `web_app = FastAPI()`        | `const app = express()`                         |
+| `@web_app.post("/generate")` | `app.post("/generate", ...)`                    |
+| `request: TTSRequest`        | Body parsed and validated (like Zod middleware) |
+| `HTTPException(400)`         | `res.status(400).json({ ... })`                 |
+| `StreamingResponse(...)`     | `res.type('audio/wav').send(buffer)`            |
+| `CORSMiddleware`             | `cors()` middleware                             |
+| Auto `/docs`                 | Swagger UI (built in)                           |
 
 **Route handler (`POST /generate`):**
 
@@ -249,15 +249,15 @@ modal run chatterbox_tts.py \
 
 ## Python syntax cheat sheet (used in this file)
 
-| Syntax | Meaning |
-|--------|---------|
-| `str \| None` | `string \| null` (Python 3.10+ unions) |
-| `def foo(self, ...)` | Instance method; `self` is like `this` |
-| `class Foo:` | Class definition |
-| `with image.imports():` | Modal-specific import scope |
-| `io.BytesIO()` | In-memory buffer (like Node `Buffer`) |
-| `pathlib.Path` | Path helper |
-| `@decorator` | Like Nest `@Injectable()` / route decorators |
+| Syntax                  | Meaning                                      |
+| ----------------------- | -------------------------------------------- |
+| `str \| None`           | `string \| null` (Python 3.10+ unions)       |
+| `def foo(self, ...)`    | Instance method; `self` is like `this`       |
+| `class Foo:`            | Class definition                             |
+| `with image.imports():` | Modal-specific import scope                  |
+| `io.BytesIO()`          | In-memory buffer (like Node `Buffer`)        |
+| `pathlib.Path`          | Path helper                                  |
+| `@decorator`            | Like Nest `@Injectable()` / route decorators |
 
 ---
 
@@ -295,11 +295,11 @@ Interactive API docs: `https://<your-modal-endpoint>/docs` (FastAPI Swagger UI).
 
 ## Required Modal secrets
 
-| Secret name | Purpose |
-|-------------|---------|
-| `cloudflare-r2` | R2 / S3-compatible credentials for the bucket mount |
-| `chatterbox-api-key` | Sets `CHATTERBOX_API_KEY` for HTTP auth |
-| `hf-token` | Hugging Face token (model download) |
+| Secret name          | Purpose                                             |
+| -------------------- | --------------------------------------------------- |
+| `cloudflare-r2`      | R2 / S3-compatible credentials for the bucket mount |
+| `chatterbox-api-key` | Sets `CHATTERBOX_API_KEY` for HTTP auth             |
+| `hf-token`           | Hugging Face token (model download)                 |
 
 ---
 

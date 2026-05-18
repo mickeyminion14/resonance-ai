@@ -77,13 +77,13 @@ const FeatureSidebar = () => {
           >
             <Image
               src={"/logo.svg"}
-              alt="Resonance AI"
+              alt="Voxora"
               width={24}
               height={24}
               className="rounded-sm"
             />
             <span className="group-data-[collapsible=icon]:hidden font-semibold text-lg tracking-tighter text-foreground">
-              Resonance AI
+              Voxora
             </span>
             <SidebarTrigger className="ml-auto lg:hidden" />
           </div>
@@ -116,6 +116,7 @@ const FeatureSidebar = () => {
       </div>
       <SidebarContent>
         <NavSection items={MAIN_MENU_ITEMS} pathname={pathname} />
+        <div className="border-b border-dashed border-border" />
         <NavSection
           items={OTHER_MENU_ITEMS()}
           pathname={pathname}

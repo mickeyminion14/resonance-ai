@@ -10,6 +10,7 @@ export const SLIDERS: Slider[] = [
     max: 2,
     step: 0.1,
     defaultValue: 0.8,
+    info: "The temperature of the speech. Higher values make the speech more creative and varied, while lower values make it more consistent and predictable.",
   },
   {
     id: "topP",
@@ -20,6 +21,7 @@ export const SLIDERS: Slider[] = [
     max: 1,
     step: 0.05,
     defaultValue: 0.95,
+    info: "Nucleus sampling (top-p). Higher values consider more of the probability mass, making speech more varied and dynamic. Lower values focus on the most likely tokens, making speech more stable and predictable.",
   },
   {
     id: "topK",
@@ -30,6 +32,7 @@ export const SLIDERS: Slider[] = [
     max: 10000,
     step: 100,
     defaultValue: 1000,
+    info: "Top-k sampling. Higher values allow more token choices, widening expression and drama. Lower values restrict choices, keeping speech more subtle and constrained.",
   },
   {
     id: "repetitionPenalty",
@@ -40,5 +43,6 @@ export const SLIDERS: Slider[] = [
     max: 2,
     step: 0.1,
     defaultValue: 1.2,
+    info: "Repetition penalty. Higher values discourage repeating phrases, producing more varied and natural flow. Lower values allow more repetition, producing a more rhythmic delivery.",
   },
 ];
