@@ -5,8 +5,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { uploadAudio } from "@/lib/r2";
 import type { VoiceCategory } from "@/generated/prisma/client";
+import { MAX_CUSTOM_VOICES_PER_ORG } from "@/constants/constraints";
 import { VOICE_CATEGORIES } from "@/constants/voice-categories";
-import { env } from "@/lib/environment";
 
 const createVoiceSchema = z.object({
   name: z.string().min(1, "Voice name is required"),
@@ -60,6 +60,19 @@ export async function POST(request: Request) {
   }
 
   const { name, category, language, description } = validation.data;
+
+  const customVoiceCount = await prisma.voice.count({
+    where: { orgId, variant: "CUSTOM" },
+  });
+
+  if (customVoiceCount >= MAX_CUSTOM_VOICES_PER_ORG) {
+    return Response.json(
+      {
+        error: `This organization has reached its limit of ${MAX_CUSTOM_VOICES_PER_ORG} custom voices.`,
+      },
+      { status: 403 },
+    );
+  }
 
   const fileBuffer = await request.arrayBuffer();
 

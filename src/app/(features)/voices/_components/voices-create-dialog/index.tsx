@@ -20,10 +20,9 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { VoiceCreateForm } from "../voice-create-form";
-import { useCheckout } from "@/hooks/use-checkout";
 
 interface VoiceCreateDialogProps {
   children?: React.ReactNode;
@@ -33,32 +32,25 @@ interface VoiceCreateDialogProps {
 
 export function VoiceCreateDialog({
   children,
-  open,
+  open: openProp,
   onOpenChange,
 }: VoiceCreateDialogProps) {
   const isMobile = useIsMobile();
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = openProp ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
 
-  const { checkout } = useCheckout();
+  const handleError = useCallback((message: string) => {
+    toast.error(message);
+  }, []);
 
-  const handleError = useCallback(
-    (message: string) => {
-      if (message === "SUBSCRIPTION_REQUIRED") {
-        toast.error("Subscription required", {
-          action: {
-            label: "Subscribe",
-            onClick: () => checkout(),
-          },
-        });
-      } else {
-        toast.error(message);
-      }
-    },
-    [checkout],
-  );
+  const handleSuccess = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={open} onOpenChange={setOpen}>
         {children && <DrawerTrigger asChild>{children}</DrawerTrigger>}
         <DrawerContent>
           <DrawerHeader>
@@ -71,6 +63,7 @@ export function VoiceCreateDialog({
           <VoiceCreateForm
             scrollable
             onError={handleError}
+            onSuccess={handleSuccess}
             footer={(submit) => (
               <DrawerFooter>
                 {submit}
@@ -86,7 +79,7 @@ export function VoiceCreateDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent>
         <DialogHeader className="text-left">
@@ -95,7 +88,7 @@ export function VoiceCreateDialog({
             Upload or record an audio sample to add a new voice to your library.
           </DialogDescription>
         </DialogHeader>
-        <VoiceCreateForm onError={handleError} />
+        <VoiceCreateForm onError={handleError} onSuccess={handleSuccess} />
       </DialogContent>
     </Dialog>
   );

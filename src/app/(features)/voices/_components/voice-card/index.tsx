@@ -129,19 +129,26 @@ export function VoiceCard({ voice }: VoiceCardProps) {
               <MoreHorizontal className="size-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent
+            align="end"
+            className="w-auto min-w-44"
+          >
             <DropdownMenuItem asChild>
-              <Link href={`/text-to-speech?voiceId=${voice.id}`}>
-                <Mic className="size-4 text-foreground" />
+              <Link
+                href={`/text-to-speech?voiceId=${voice.id}`}
+                className="flex w-full items-center gap-2 whitespace-nowrap"
+              >
+                <Mic className="size-4 shrink-0 text-foreground" />
                 <span className="font-medium">Use this voice</span>
               </Link>
             </DropdownMenuItem>
             {voice.variant === "CUSTOM" && (
               <DropdownMenuItem
                 onClick={() => setShowDeleteDialog(true)}
-                className="text-destructive focus:text-destructive"
+                variant="destructive"
+                className="whitespace-nowrap"
               >
-                <Trash2 className="size-4 text-destructive" />
+                <Trash2 className="size-4 shrink-0" />
                 <span className="font-medium">Delete voice</span>
               </DropdownMenuItem>
             )}
