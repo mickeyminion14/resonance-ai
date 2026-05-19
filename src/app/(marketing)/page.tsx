@@ -1,53 +1,53 @@
 import Link from "next/link";
-import { Button } from "../../components/ui/button";
-import { cn } from "../../lib/utils";
-import { ArrowRight, Pen } from "lucide-react";
+import { ArrowRight, AudioLines } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function MarketingPage() {
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className={cn("flex items-center justify-center flex-col")}>
-        <div className="mb-4 flex items-center rounded-full border border-[#FFD200]/40 bg-[#FFD200]/15 p-4 uppercase text-[#E3073C] shadow-sm">
-          <Pen className="mr-2 h-6 w-6" />
-          The No. 1 Creative Workspace
+    <div className="flex w-full max-w-4xl flex-col items-center">
+      <div className={cn("flex flex-col items-center justify-center")}>
+        <div className="mb-4 flex items-center rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-medium uppercase tracking-wide text-violet-700 shadow-sm">
+          <AudioLines className="mr-2 h-5 w-5" />
+          AI text-to-speech &amp; voice cloning
         </div>
-        <h1 className="mb-6 text-center text-2xl text-neutral-800 md:text-5xl">
-          Sketch & Collab makes collaboration effortless
+        <h1 className="mb-6 max-w-3xl text-center text-2xl font-semibold tracking-tight text-neutral-800 md:text-5xl">
+          Turn any text into natural, expressive speech
         </h1>
-        <div
+        <p
           className={cn(
-            "mb-6 bg-transparent text-center text-small text-[#1F84EF] md:text-xl",
+            "mb-6 max-w-2xl bg-transparent text-center text-sm text-violet-700 md:text-xl",
             "typewriter",
           )}
         >
-          Sketch ideas, collaborate with your team, and bring your concepts to
-          life seamlessly.
-        </div>
-        <div className="w-fit rounded-md bg-linear-to-r from-[#1F84EF] via-[#06E07F] to-[#FFD200] p-4 text-2xl text-white md:text-5xl">
-          Create together.
+          Pick a voice, fine-tune the delivery, and hear your words come alive in
+          seconds.
+        </p>
+        <div className="w-fit rounded-md bg-linear-to-r from-violet-600 via-cyan-500 to-emerald-400 px-6 py-4 text-2xl font-semibold text-white md:text-5xl">
+          Give your words a voice.
         </div>
       </div>
       <div className="mt-8 flex flex-col items-center justify-center">
-        <h1 className="mb-6 max-w-[800px] text-center text-xl text-neutral-800 md:text-4xl">
-          Creative Collaboration: fast sketches, connected teams
-        </h1>
-        <p className="max-w-[800px] text-lg text-neutral-700">
-          Bringing ideas to life has never been this seamless. With Sketch &
-          <span className="font-medium text-[#E3073C]"> Collab</span>, your team
-          can brainstorm, draw, annotate, and share in real time, all in one
-          interactive workspace. From wireframes to sticky notes to polished
-          designs, everything is collaborative, customizable, and designed to
-          keep your team engaged. It&apos;s intuitive, dynamic, and, most
-          importantly, <span className="text-[#06E07F]">fun</span>.
+        <h2 className="mb-6 max-w-[800px] text-center text-xl font-semibold text-neutral-800 md:text-4xl">
+          Studio-quality speech, built for creators and teams
+        </h2>
+        <p className="max-w-[800px] text-center text-lg text-neutral-700">
+          <span className="font-medium text-violet-700">Voxora</span> helps you
+          generate lifelike narration from plain text — narrate stories, record
+          ads, guide meditations, or prototype podcasts without a recording booth.
+          Browse a library of voices, clone your own from a short sample, and
+          tweak temperature and pacing until every line sounds{" "}
+          <span className="font-medium text-cyan-600">exactly right</span>.
         </p>
       </div>
       <Button
-        className="mt-6 border-[#1F84EF] bg-[#1F84EF] text-white hover:bg-[#06E07F] hover:text-neutral-950"
-        size={"lg"}
+        className="mt-6 bg-violet-600 text-white hover:bg-violet-700"
+        size="lg"
         asChild
       >
-        <Link href="/dashboard">
-          Try Sketch & Collab for free <ArrowRight className="h-4 w-4" />
+        <Link href="/text-to-speech">
+          Try Voxora for free <ArrowRight className="h-4 w-4" />
         </Link>
       </Button>
     </div>

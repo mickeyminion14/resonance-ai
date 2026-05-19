@@ -1,21 +1,22 @@
+import Link from "next/link";
+
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export const Navbar = () => {
   return (
-    <div className="fix-top-0 w-full h-14 px-4 border-b shadow-sm bg-white flex items-center">
-      <div className="md:max-w-screen-2xl mx-auto flex items-center w-full justify-between">
+    <header className="fixed top-0 z-50 flex h-14 w-full items-center border-b bg-white px-4 shadow-sm">
+      <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-between">
         <Logo />
-        <div className="space-x-4 md:block md:w-auto flex items-center justify-between w-full">
-          <Button size={"sm"} variant={"outline"} asChild>
-            <Link href={"/dashboard"}>Login</Link>
+        <div className="flex items-center gap-3">
+          <Button size="sm" variant="outline" asChild>
+            <Link href="/sign-in">Log in</Link>
           </Button>
-          <Button size={"sm"} asChild>
-            <Link href={"/dashboard"}>Try Skech & Collab for free</Link>
+          <Button size="sm" asChild>
+            <Link href="/text-to-speech">Try Voxora for free</Link>
           </Button>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
