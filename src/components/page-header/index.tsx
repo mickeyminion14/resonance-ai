@@ -1,15 +1,18 @@
 import { Headphones, ThumbsUp } from "lucide-react";
-import { Button } from "../ui/button";
 import Link from "next/link";
-import { SidebarTrigger } from "../ui/sidebar";
+
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { SidebarTrigger } from "../ui/sidebar";
 
 const PageHeader = ({
   title,
   className,
+  trailing,
 }: {
   title: string;
   className?: string;
+  trailing?: React.ReactNode;
 }) => {
   return (
     <div
@@ -23,14 +26,15 @@ const PageHeader = ({
         <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
       </div>
       <div className="flex items-center gap-3">
-        <Button variant={"outline"} size={"sm"} asChild>
-          <Link href={"mailto:dev.sarthak.agrawal@gmail.com"}>
+        {trailing}
+        <Button variant="outline" size="sm" asChild>
+          <Link href="mailto:dev.sarthak.agrawal@gmail.com">
             <ThumbsUp />
             <span className="hidden lg:block">Feedback</span>
           </Link>
         </Button>
-        <Button variant={"outline"} size={"sm"} asChild>
-          <Link href={"mailto:dev.sarthak.agrawal@gmail.com"}>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="mailto:dev.sarthak.agrawal@gmail.com">
             <Headphones />
             <span className="hidden lg:block">Need Help ?</span>
           </Link>

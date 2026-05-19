@@ -5,8 +5,8 @@ const OrgSelectionPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <OrganizationList
         hidePersonal
-        afterCreateOrganizationUrl={"/"}
-        afterSelectOrganizationUrl={"/"}
+        afterCreateOrganizationUrl="/dashboard"
+        afterSelectOrganizationUrl="/dashboard"
         appearance={{
           elements: {
             rootBox: "mx-auto",

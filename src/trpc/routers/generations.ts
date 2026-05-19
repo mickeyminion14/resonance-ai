@@ -1,4 +1,7 @@
-import { TEXT_MAX_LENGTH } from "@/constants/constraints";
+import {
+  MAX_GENERATIONS_PER_ORG,
+  TEXT_MAX_LENGTH,
+} from "@/constants/constraints";
 import { chatterbox } from "@/lib/chatterbox-client";
 import { prisma } from "@/lib/db";
 import { uploadAudio } from "@/lib/r2";
@@ -56,6 +59,15 @@ export const generationsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const generationCount = await prisma.generation.count({
+        where: { orgId: ctx.orgId },
+      });
+      if (generationCount >= MAX_GENERATIONS_PER_ORG) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `This organization has reached its limit of ${MAX_GENERATIONS_PER_ORG} generations.`,
+        });
+      }
       const voice = await prisma.voice.findUnique({
         where: {
           id: input.voiceId,
@@ -151,4 +163,14 @@ export const generationsRouter = createTRPCRouter({
         id: generationId,
       };
     }),
+  getUsage: orgProcedure.query(async ({ ctx }) => {
+    const used = await prisma.generation.count({ where: { orgId: ctx.orgId } });
+    const remaining = Math.max(0, MAX_GENERATIONS_PER_ORG - used);
+    return {
+      used,
+      limit: MAX_GENERATIONS_PER_ORG,
+      remaining,
+      limitReached: remaining === 0,
+    };
+  }),
 });

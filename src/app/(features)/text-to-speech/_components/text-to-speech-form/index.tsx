@@ -7,7 +7,7 @@ import { useAppForm } from "@/hooks/use-app-form";
 import React from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 
 const TTSFormSchema = z.object({
@@ -43,8 +43,16 @@ const TextToSpeechForm = ({
 }) => {
   const trpc = useTRPC();
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const createMutation = useMutation(
-    trpc.generations.create.mutationOptions({}),
+    trpc.generations.create.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.generations.getUsage.queryFilter(),
+        );
+      },
+    }),
   );
 
   const form = useAppForm({

@@ -1,3 +1,4 @@
+import { OrgQueryCacheReset } from "@/components/org-query-cache-reset";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import FeatureSidebar from "./_components/sidebar";
@@ -7,6 +8,7 @@ const FeatureLaylout = async ({ children }: { children: React.ReactNode }) => {
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
   return (
     <SidebarProvider defaultOpen={defaultOpen} className="h-svh">
+      <OrgQueryCacheReset />
       <FeatureSidebar />
       <SidebarInset className="min-h-0 min-w-0">
         <main className="flex min-h-0 flex-1 flex-col">{children}</main>
