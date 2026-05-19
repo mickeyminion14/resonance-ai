@@ -107,6 +107,8 @@ const FeatureSidebar = () => {
                     organizationPreviewMainIdentifier: "text-[13px]!",
                     organizationSwitcherTriggerIcon:
                       "size-4! text-sidebar-foreground! group-data-[collapsible=icon]:hidden!",
+                    organizationSwitcherPopoverRootBox:
+                      "pointer-events-auto! z-[100]!",
                   },
                 }}
               />
@@ -142,6 +144,7 @@ const FeatureSidebar = () => {
                   userButtonOuterIdentifier:
                     "text-[13px]! tracking-tight! font-medium! text-foreground! pl-0! group-data-[collapsible=icon]:hidden!",
                   userButtonAvatarBox: "size-6!",
+                  userButtonPopoverRootBox: "pointer-events-auto! z-[100]!",
                 },
               }}
             />

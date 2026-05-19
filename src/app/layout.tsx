@@ -24,7 +24,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          organizationSwitcherPopoverRootBox: {
+            pointerEvents: "auto",
+          },
+          userButtonPopoverRootBox: {
+            pointerEvents: "auto",
+          },
+        },
+      }}
+    >
       <html lang="en" className={cn("h-full", "antialiased", inter.variable)}>
         <body className="min-h-full flex flex-col">
           <TRPCReactProvider>

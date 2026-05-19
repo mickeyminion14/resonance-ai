@@ -4,7 +4,6 @@ import {
   Home,
   LayoutGrid,
   Settings,
-  Volume2,
 } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
 import { MenuItem } from "@/interfaces/sidebar";
@@ -32,7 +31,7 @@ export const OTHER_MENU_ITEMS = (): MenuItem[] => {
     {
       title: "Settings",
       icon: Settings,
-      onClick: () => clerk.openOrganizationProfile,
+      onClick: () => clerk.openOrganizationProfile(),
     },
 
     {

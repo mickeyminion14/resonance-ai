@@ -187,3 +187,28 @@
     border-color: #ff7f50;
   }
 }
+
+/* Clerk popovers inside Radix Sheet (mobile sidebar) block pointer events by default */
+.cl-userButtonPopoverRootBox,
+.cl-organizationSwitcherPopoverRootBox {
+  pointer-events: auto;
+}
+
+/* Clerk account/org modals must sit above the Sheet overlay (z-50) */
+.cl-modalBackdrop,
+.cl-userProfileRoot,
+.cl-organizationProfileRoot {
+  z-index: 100 !important;
+}
+
+@media (max-width: 639px) {
+  .typewriter {
+    width: auto !important;
+    white-space: normal;
+    overflow: visible;
+    border-right: none;
+    animation: none;
+    font-family: inherit;
+    font-size: inherit;
+  }
+}

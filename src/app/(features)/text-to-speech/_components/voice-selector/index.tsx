@@ -21,7 +21,6 @@ import { VOICE_CATEGORY_LABELS } from "@/constants/voice-categories";
 
 export function VoiceSelector() {
   const { customVoices, systemVoices, allVoices: voices } = useTTSVoices();
-  console.log(customVoices, systemVoices, voices);
 
   const form = useTypedAppFormContext(ttsFormOptions);
   const voiceId = useStore(form.store, (s) => s.values.voiceId);

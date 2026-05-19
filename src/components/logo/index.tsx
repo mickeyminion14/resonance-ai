@@ -3,12 +3,22 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-export const Logo = () => {
+type LogoProps = {
+  href?: string;
+  className?: string;
+};
+
+export const Logo = ({ href = "/dashboard", className }: LogoProps) => {
   return (
-    <Link href="/dashboard">
-      <div className="hover:opacity-75 transition items-center gap-x-2 hidden md:flex">
-        <Image src="/logo.svg" alt="Logo" height={30} width={30} />
-        <p className={cn("text-lg text-neutral-700 pb-1")}>Voxora</p>
+    <Link href={href}>
+      <div
+        className={cn(
+          "flex items-center gap-x-2 transition hover:opacity-75",
+          className,
+        )}
+      >
+        <Image src="/logo.svg" alt="Voxora" height={30} width={30} />
+        <p className="hidden pb-1 text-lg text-neutral-700 sm:block">Voxora</p>
       </div>
     </Link>
   );
