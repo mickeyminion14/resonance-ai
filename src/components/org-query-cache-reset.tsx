@@ -12,21 +12,27 @@ const ACTIVE_ORG_STORAGE_KEY = "voxora-active-org-id";
  * tRPC data (generations, voices, usage) is not shown from the previous org.
  */
 export function OrgQueryCacheReset() {
-  const { orgId } = useAuth();
+  const { orgId, isLoaded } = useAuth();
   const queryClient = useQueryClient();
   const router = useRouter();
   const previousOrgId = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !isLoaded) return;
 
+    const currentOrgId = orgId ?? null;
     const storedOrgId = sessionStorage.getItem(ACTIVE_ORG_STORAGE_KEY);
     const prev = previousOrgId.current;
 
     const orgChangedInSession =
-      prev !== undefined && prev !== (orgId ?? null);
+      typeof prev === "string" &&
+      typeof currentOrgId === "string" &&
+      prev !== currentOrgId;
+
     const orgChangedAcrossNavigation =
-      storedOrgId !== null && orgId !== null && storedOrgId !== orgId;
+      typeof storedOrgId === "string" &&
+      typeof currentOrgId === "string" &&
+      storedOrgId !== currentOrgId;
 
     if (orgChangedInSession || orgChangedAcrossNavigation) {
       queryClient.clear();
@@ -34,12 +40,12 @@ export function OrgQueryCacheReset() {
       router.refresh();
     }
 
-    if (orgId) {
-      sessionStorage.setItem(ACTIVE_ORG_STORAGE_KEY, orgId);
+    if (currentOrgId) {
+      sessionStorage.setItem(ACTIVE_ORG_STORAGE_KEY, currentOrgId);
     }
 
-    previousOrgId.current = orgId ?? null;
-  }, [orgId, queryClient, router]);
+    previousOrgId.current = currentOrgId;
+  }, [orgId, isLoaded, queryClient, router]);
 
   return null;
 }

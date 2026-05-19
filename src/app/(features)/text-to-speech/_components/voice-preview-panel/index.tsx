@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pause, Play, Download, Redo, Undo, Info } from "lucide-react";
+import { Pause, Play, Download, Redo, Undo } from "lucide-react";
 import { format } from "date-fns";
 
 import { Badge } from "@/components/ui/badge";
@@ -121,13 +121,18 @@ export default function VoicePreviewPanel({
           {/* Metadata */}
           <div className="flex min-w-0 flex-col gap-0.5">
             <Tooltip>
-              <TooltipTrigger className="w-fit">
-                <p className="truncate text-sm font-medium text-foreground text-left">
-                  {text}
-                </p>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex max-w-full min-w-0 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+                >
+                  <span className="truncate text-sm font-medium text-foreground">
+                    {text}
+                  </span>
+                </button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>{text}</p>
+              <TooltipContent align="start" side="top" className="max-w-sm">
+                <p className="text-pretty">{text}</p>
               </TooltipContent>
             </Tooltip>
 
