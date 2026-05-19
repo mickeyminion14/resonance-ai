@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/node";
+
 import { auth } from "@clerk/nextjs/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
@@ -21,14 +23,20 @@ const t = initTRPC
      */
     transformer: SuperJSON,
   });
+const sentryMiddleware = t.middleware(
+  Sentry.trpcMiddleware({
+    attachRpcInput: true,
+  }),
+);
+
 // Base router and procedure helpers
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
-export const baseProcedure = t.procedure;
+export const baseProcedure = t.procedure.use(sentryMiddleware);
 
 // Authenticated procedure
 
-export const authProcedure = t.procedure.use(async ({ next }) => {
+export const authProcedure = baseProcedure.use(async ({ next }) => {
   const { userId } = await auth();
 
   if (!userId) {
@@ -40,7 +48,7 @@ export const authProcedure = t.procedure.use(async ({ next }) => {
   });
 });
 
-export const orgProcedure = t.procedure.use(async ({ next }) => {
+export const orgProcedure = baseProcedure.use(async ({ next }) => {
   const { userId, orgId } = await auth();
 
   if (!userId) {

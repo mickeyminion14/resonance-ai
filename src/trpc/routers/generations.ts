@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import {
   MAX_GENERATIONS_PER_ORG,
   TEXT_MAX_LENGTH,
@@ -101,6 +102,11 @@ export const generationsRouter = createTRPCRouter({
         },
         parseAs: "arrayBuffer",
       });
+      Sentry.logger.info("Generation started", {
+        orgId: ctx.orgId,
+        voiceId: input.voiceId,
+        textLength: input.text.length,
+      });
       if (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -113,6 +119,7 @@ export const generationsRouter = createTRPCRouter({
           message: "Invalid audio response",
         });
       }
+
       const buffer = Buffer.from(data);
       let generationId: string | null = null;
       let r2ObjectKey: string | null = null;
@@ -142,12 +149,23 @@ export const generationsRouter = createTRPCRouter({
           where: { id: generationId },
           data: { r2ObjectKey },
         });
+
+        Sentry.logger.info("Audio generated", {
+          orgId: ctx.orgId,
+          generationId: generation.id,
+        });
       } catch (error) {
         if (generationId) {
           await prisma.generation
             .delete({ where: { id: generationId } })
             .catch(() => {});
         }
+
+        Sentry.logger.error("Generation failed", {
+          orgId: ctx.orgId,
+          voiceId: input.voiceId,
+        });
+
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create generation",
