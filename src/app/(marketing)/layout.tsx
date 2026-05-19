@@ -1,5 +1,57 @@
+import type { Metadata } from "next";
+
+import { getSiteUrl } from "@/lib/site-url";
+
 import { Footer } from "./_components/footer";
 import { Navbar } from "./_components/navbar";
+
+const siteUrl = getSiteUrl();
+
+const marketingDescription =
+  "Turn text into natural, expressive speech. Browse built-in voices, clone your own from a short sample, and generate studio-quality audio in seconds.";
+
+export const metadata: Metadata = {
+  title: "Voxora — AI Text to Speech & Voice Cloning",
+  description: marketingDescription,
+  keywords: [
+    "text to speech",
+    "voice cloning",
+    "AI TTS",
+    "generative voice",
+    "neural TTS",
+    "voice AI",
+    "Voxora",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Voxora — AI Text to Speech & Voice Cloning",
+    description:
+      "Studio-quality AI speech for creators and teams. Built-in voices, zero-shot cloning, and fine-tuned delivery.",
+    url: siteUrl.origin,
+    siteName: "Voxora",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/logo.svg",
+        alt: "Voxora — AI text-to-speech and voice cloning",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Voxora — AI Text to Speech & Voice Cloning",
+    description:
+      "Turn text into natural speech with built-in voices and custom clones.",
+    images: ["/logo.svg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function MarketingLayout({
   children,

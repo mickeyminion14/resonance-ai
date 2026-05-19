@@ -7,10 +7,12 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "../trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { getSiteUrl } from "@/lib/site-url";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
+  metadataBase: getSiteUrl(),
   title: {
     default: "Voxora",
     template: `Voxora | %s`,

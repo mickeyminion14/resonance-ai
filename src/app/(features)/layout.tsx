@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+
 import { OrgQueryCacheReset } from "@/components/org-query-cache-reset";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { cookies } from "next/headers";
+
 import FeatureSidebar from "./_components/sidebar";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const FeatureLaylout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
