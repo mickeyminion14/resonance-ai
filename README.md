@@ -53,26 +53,99 @@
 
 ## Architecture
 
-**Cloud-native AI architecture** — decoupled **inference service** (Python/GPU) and **AI application layer** (TypeScript/edge-friendly Next.js).
+**Cloud-native AI architecture** — decoupled **inference service** (Python/GPU) and **AI application layer** (TypeScript/Next.js on Vercel).
 
-```
-┌─────────────┐     ┌──────────────────────────┐     ┌─────────────────┐
-│   Browser   │────▶│  Next.js (Vercel)         │────▶│   PostgreSQL    │
-│  React UI   │     │  tRPC · REST · AI orch.  │     │   (Prisma)      │
-└─────────────┘     └────────────┬─────────────┘     └─────────────────┘
-                                 │
-              ┌──────────────────┼──────────────────┐
-              ▼                  ▼                  ▼
-        ┌──────────┐      ┌───────────┐      ┌──────────────────┐
-        │  Clerk   │      │ Cloudflare│      │ Modal · GPU      │
-        │  (auth)  │      │ R2 (audio)│      │ Chatterbox TTS   │
-        └──────────┘      └───────────┘      │ model serving    │
-                                               └──────────────────┘
+### System overview
+
+```mermaid
+flowchart TB
+    subgraph Client["Client layer"]
+        Browser["Browser · React 19 UI"]
+    end
+
+    subgraph App["Application layer · Vercel"]
+        Next["Next.js 16 · App Router"]
+        TRPC["tRPC · /api/trpc"]
+        REST["REST · /api/voices · /api/audio"]
+        Next --> TRPC
+        Next --> REST
+    end
+
+    subgraph Platform["Platform services"]
+        Clerk["Clerk · Auth & multi-tenant orgs"]
+        PG[("PostgreSQL · Prisma")]
+        R2[("Cloudflare R2 · Voice samples & generated audio")]
+        Sentry["Sentry · AI observability"]
+    end
+
+    subgraph Inference["Inference layer · Modal"]
+        Modal["Serverless GPU workers"]
+        Chatterbox["Chatterbox TTS · FastAPI"]
+        Modal --> Chatterbox
+    end
+
+    Browser -->|"HTTPS"| Next
+    Next --> Clerk
+    TRPC --> PG
+    REST --> PG
+    TRPC --> R2
+    REST --> R2
+    TRPC -->|"OpenAPI · X-Api-Key"| Chatterbox
+    Chatterbox -->|"Read voice refs"| R2
+    Next --> Sentry
 ```
 
-- **Next.js** — **AI-native** frontend + **API gateway**: tRPC (`/api/trpc`), REST (`/api/voices`, `/api/audio`), audio proxy from R2.
-- **Chatterbox on Modal** — **Scalable inference** / **model deployment** on **serverless GPUs**. See [`docs/chatterbox-tts.md`](./docs/chatterbox-tts.md) and [`chatterbox_tts.py`](./chatterbox_tts.py).
-- **OpenAPI contract** — **Type-safe AI API** codegen via `npm run sync-api` → `src/types/chatterbox-api.d.ts`.
+### TTS generation flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant UI as Next.js UI
+    participant API as tRPC / REST
+    participant DB as PostgreSQL
+    participant R2 as Cloudflare R2
+    participant TTS as Chatterbox on Modal
+
+    User->>UI: Enter text, select voice, tune params
+    UI->>API: generations.create
+    API->>DB: Validate org limits · resolve voice
+    API->>TTS: POST /generate (prompt, voice_key, sampling)
+    TTS->>R2: Load reference audio (system or custom clone)
+    TTS-->>API: WAV audio stream
+    API->>R2: Upload generated audio
+    API->>DB: Persist generation metadata
+    API-->>UI: Generation id + audio URL
+    UI->>API: GET /api/audio/:id
+    API->>R2: Stream audio to client
+    UI-->>User: Playback · waveform preview
+```
+
+### Voice cloning flow
+
+```mermaid
+flowchart LR
+    A["Upload / record sample"] --> B["POST /api/voices/create"]
+    B --> C{"Validate duration & size"}
+    C -->|ok| D["Upload sample to R2"]
+    D --> E["Create Voice row in DB"]
+    E --> F["Available in TTS voice picker"]
+    F --> G["Used as voice_key at inference"]
+    C -->|fail| H["403 / validation error"]
+```
+
+### Component responsibilities
+
+| Component | Role |
+|-----------|------|
+| **Next.js** | AI-native frontend + API gateway: tRPC, REST, audio proxy, org-scoped data |
+| **Chatterbox on Modal** | GPU **model serving** — neural TTS + zero-shot cloning ([`chatterbox_tts.py`](./chatterbox_tts.py)) |
+| **Cloudflare R2** | Durable storage for voice samples and generated WAV files |
+| **PostgreSQL** | Voices, generations, org metadata via Prisma |
+| **Clerk** | Authentication, organizations, session middleware |
+| **OpenAPI sync** | Type-safe inference client — `npm run sync-api` → [`src/types/chatterbox-api.d.ts`](./src/types/chatterbox-api.d.ts) |
+
+Deployment details for the inference service: **[docs/chatterbox-tts.md](./docs/chatterbox-tts.md)**.
 
 ## Skills demonstrated (for recruiters)
 
