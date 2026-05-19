@@ -8,7 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { VoiceAvatar } from "@/components/voice-avatar";
 
 type VoicePreviewMobileVoice = {
-  id?: string;
+  id?: string | null;
   name: string;
 };
 

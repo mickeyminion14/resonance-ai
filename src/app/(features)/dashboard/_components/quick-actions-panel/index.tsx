@@ -1,5 +1,4 @@
 import { QUICK_ACTIONS } from "@/constants/dashboard";
-import React from "react";
 import QuickActionCard from "./quick-action-card";
 
 const QuickActionsPanel = () => {
