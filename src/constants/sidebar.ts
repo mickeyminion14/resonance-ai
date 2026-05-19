@@ -24,10 +24,6 @@ export const MAIN_MENU_ITEMS: MenuItem[] = [
     url: "/text-to-speech",
     icon: AudioLines,
   },
-  {
-    title: "Voice Cloning",
-    icon: Volume2,
-  },
 ];
 
 export const OTHER_MENU_ITEMS = (): MenuItem[] => {

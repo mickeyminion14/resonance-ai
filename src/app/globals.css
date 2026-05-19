@@ -116,6 +116,34 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@layer utilities {
+  .scrollbar-pretty {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--muted-foreground) 35%, transparent)
+      transparent;
+  }
+
+  .scrollbar-pretty::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-pretty::-webkit-scrollbar-track {
+    margin-block: 4px;
+    background: transparent;
+  }
+
+  .scrollbar-pretty::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
+    transition: background 150ms ease;
+  }
+
+  .scrollbar-pretty::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
